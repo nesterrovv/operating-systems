@@ -45,14 +45,8 @@ static struct vm_area_struct* get_vma(struct task_struct *ts) {
     return vma;
 }
 
-/* function for getting vm_area_struct */
-//static struct vfsmount* get_vfs(void) {
-//    struct vfsmount* vfs = kern_mount(get_fs_type("bdev"));
-//    return vfs;
-//}
-
 /* utility function for sending message to user */
-static void to_user(char __user *buff, size_t count, loff_t *fpos) {
+static void to_user(const char __user *buff, size_t count, loff_t *fpos) {
     count = strlen(buffer_k) + 1;
     copy_to_user(buff, buffer_k, count);
     *fpos += count;
@@ -129,22 +123,11 @@ static ssize_t nds_to_user(struct file* filp, char __user* buff, size_t count, l
             printk(KERN_WARNING "Cannot get net_device struct\n");
             sprintf(buffer_k, KERNEL_ERROR_MSG);
         } else {
-            //sprintf(buffer_k, "found [%s]\n", dev -> name);
-            //printk(KERN_INFO "first found [%s]\n", dev -> name);
-            //sprintf(buffer_k, "first found [%s]\n", dev -> name);
-            //printk("found [%s]\n", dev -> name);
-            //while (dev) {
-                printk(KERN_INFO "found11 [%s]\n", dev->name);
-                printk(KERN_INFO "found12 [%s]\n", dev2->name);
-                sprintf(buffer_k, "found [%s]\n", dev2->name);
-                sprintf(buffer_k, "Found network device:\n\tname: %s\n\tmem_start: %lu\n\tmem_end: %lu\n\tbase_addr: %lu\n\tirq: %d\n\tstate: %lu\nFound network device:\n\tname: %s\n\tmem_start: %lu\n\tmem_end: %lu\n\tbase_addr: %lu\n\tirq: %d\n\tstate: %lu\n",
-                dev->name, dev->mem_start, dev->mem_end, dev->base_addr, dev->irq, dev->state, dev2->name, dev2->mem_start, dev2->mem_end, dev2->base_addr, dev2->irq, dev2->state);
-                //dev = next_net_device(dev);
-                //if (dev == NULL) {
-                 //   sprintf(buffer_k, "It was last network device!\n");
-                //}
-            //}
-            //sprintf(buffer_k, "mnt_flags = %d\n", vfs->mnt_flags);
+            printk(KERN_INFO "found net_device [%s]\n", dev -> name);
+            printk(KERN_INFO "found net device [%s]\n", dev2 -> name);
+            sprintf(buffer_k, "found [%s]\n", dev2->name);
+            sprintf(buffer_k, "Found network device:\n\tname: %s\n\tmem_start: %lu\n\tmem_end: %lu\n\tbase_addr: %lu\n\tirq: %d\n\tstate: %lu\nFound network device:\n\tname: %s\n\tmem_start: %lu\n\tmem_end: %lu\n\tbase_addr: %lu\n\tirq: %d\n\tstate: %lu\n",
+            dev -> name, dev -> mem_start, dev -> mem_end, dev -> base_addr, dev -> irq, dev -> state, dev2 -> name, dev2 -> mem_start, dev2 -> mem_end, dev2 -> base_addr, dev2 -> irq, dev2 -> state);
         }
         read_unlock(&dev_base_lock);
     }
