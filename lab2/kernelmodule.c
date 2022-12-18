@@ -27,7 +27,6 @@ static struct dentry *debugfs_nds_file;
 /* needed structs and arguments */
 static struct vm_area_struct *vma;
 static struct net_device *dev;
-static struct net_device *dev2;
 static pid_t pid_num;
 
 static char buffer_k[BUFFER_SIZE] = {NULL};
@@ -72,8 +71,7 @@ static ssize_t vma_to_user(struct file* filp, char __user* buff, size_t count, l
                 printk(KERN_WARNING "Cannot get vm_area_struct\n");
                 sprintf(buffer_k, KERNEL_ERROR_MSG);
             } else {
-                char vma_to_user[10000];
-                int counter = 1;
+                char vma_to_user[BUFFER_SIZE];
                 while (vma) {
                     char current_vma_info[200];
                     char filename[50];
@@ -85,18 +83,7 @@ static ssize_t vma_to_user(struct file* filp, char __user* buff, size_t count, l
                     sprintf(current_vma_info, "%#lx - %#lx, flags = %lu, pgoff = %lu, mapped file: %s\n",
                     vma -> vm_start, vma -> vm_end, vma -> vm_flags, vma -> vm_pgoff, filename);
                     strcat(vma_to_user, current_vma_info);
-                    //if ((vma->vm_next) != NULL) {
-                        vma = vma->vm_next;
-                    //} else {
-                     //   break;    
-                    //}
-                    //break;
-                    //if (counter == 33) {
-                    //    strcat(vma_to_user, "Demonstration of driver working stopped successfully.\n");
-                    //    break;
-                    //}
-                    counter++;
-                
+                    vma = vma->vm_next;
                 }
                 sprintf(buffer_k, vma_to_user);
             } 
@@ -144,26 +131,18 @@ static ssize_t nds_to_user(struct file* filp, char __user* buff, size_t count, l
         read_lock(&dev_base_lock);
         printk(KERN_INFO "Reading...\n");
         dev = first_net_device(&init_net);
-        //dev2 = next_net_device(dev);
         if (dev == NULL) {
             printk(KERN_WARNING "Cannot get net_device struct\n");
             sprintf(buffer_k, KERNEL_ERROR_MSG);
         } else {
-            //sprintf(buffer_k, "found [%s]\n", dev -> name);
-            //printk(KERN_INFO "first found [%s]\n", dev -> name);
-            //sprintf(buffer_k, "first found [%s]\n", dev -> name);
-            //printk("found [%s]\n", dev -> name);
             char data_for_user[5000];
             while (dev) {
                 printk(KERN_INFO "found [%s]\n", dev->name);
-                printk(KERN_INFO "MAC address: %pMF\n", dev -> dev_addr);
-                printk(KERN_INFO "Broadcast address: %pMF\n", dev -> broadcast);
                 char nds_info[1000];
                 sprintf(nds_info, "Found network device:\n\tname: %s\n\tmem_start: %#lx\n\tmem_end: %#lx\n\tbase_addr: %#lx\n\tirq: %d\n\tstate: %lu\n\tMAC address: %pMF\n\tbroadcast address: %pMF\n\tflags: %d\n\tmtu: %d\n\tmin_mtu: %d\n\tmax_mtu: %d\n\ttype: %hu\n\tmin_header_len: %d\n\tname_assign_type: %d\n\tgroup: %d\n\tneeded_headroom: %hu\n\tneeded_tailroom: %hu\n", dev->name, dev->mem_start, dev->mem_end, dev->base_addr, dev->irq, dev->state, dev->dev_addr, dev->broadcast, dev->flags, dev->mtu, dev->min_mtu, dev->max_mtu, dev->type, dev->min_header_len, dev->name_assign_type, dev->group, dev->needed_headroom, dev->needed_tailroom);
                 strcat(data_for_user, nds_info);
                 dev = next_net_device(dev);
             }
-            //sprintf(buffer_k, "mnt_flags = %d\n", vfs->mnt_flags);
             sprintf(buffer_k, data_for_user);
         }
         read_unlock(&dev_base_lock);
