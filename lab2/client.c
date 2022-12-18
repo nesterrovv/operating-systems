@@ -23,7 +23,7 @@ int main( int argc, char *argv[] ) {
     size_t length = 0;
     if (strcmp(argv[1], "-vma") == 0 ) {
         printf("Sending your PID to kernel module...\n");
-        char buf[256];
+        char buf[1024];
         sprintf(buf, "%s", argv[2]);
         fwrite(&buf, 1, sizeof(buf), vma_arg_file);
         printf("Getting vm_area_struct information from kernel module...\n ");
