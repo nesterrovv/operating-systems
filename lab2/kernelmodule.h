@@ -5,5 +5,5 @@
 #define DEBUGFS_VMA_ARG_FILE_PATH "/sys/kernel/debug/os_lab2/debugfs_vma_arg"
 #define DEBUGFS_NDS_FILE_NAME "debugfs_nds"
 #define DEBUGFS_NDS_FILE_PATH "/sys/kernel/debug/os_lab2/debugfs_nds"
-#define BUFFER_SIZE 1000
+#define BUFFER_SIZE 10000
 #define KERNEL_ERROR_MSG "Kernel module error\ndmesg for more information\n"
