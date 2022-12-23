@@ -199,7 +199,8 @@ static const struct file_operations vma_file_op = {
 static const struct file_operations nds_file_op = {
       .open = safe_open_nds,
       .read = nds_to_user,
-      .release = save_close_nds;
+      .release = save_close_nds,
+      .write = to_user;
 };
 
 /* module initialization */
