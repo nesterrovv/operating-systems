@@ -165,15 +165,10 @@ static ssize_t nds_to_user(struct file* filp, char __user* buff, size_t count, l
         read_lock(&dev_base_lock);
         printk(KERN_INFO "Reading...\n");
         dev = first_net_device(&init_net);
-        //dev2 = next_net_device(dev);
         if (dev == NULL) {
             printk(KERN_WARNING "Cannot get net_device struct\n");
             sprintf(buffer_k, KERNEL_ERROR_MSG);
         } else {
-            //sprintf(buffer_k, "found [%s]\n", dev -> name);
-            //printk(KERN_INFO "first found [%s]\n", dev -> name);
-            //sprintf(buffer_k, "first found [%s]\n", dev -> name);
-            //printk("found [%s]\n", dev -> name);
             char data_for_user[5000];
             while (dev) {
                 printk(KERN_INFO "found [%s]\n", dev->name);
@@ -184,7 +179,6 @@ static ssize_t nds_to_user(struct file* filp, char __user* buff, size_t count, l
                 strcat(data_for_user, nds_info);
                 dev = next_net_device(dev);
             }
-            //sprintf(buffer_k, "mnt_flags = %d\n", vfs->mnt_flags);
             sprintf(buffer_k, data_for_user);
         }
         read_unlock(&dev_base_lock);
@@ -201,9 +195,7 @@ static const struct file_operations vma_file_op = {
     .read = vma_to_user,
     .write = pid_from_user;
 };
-//static const struct file_operations vma_arg_file_op = {
-//        .write = pid_from_user
-//};
+
 static const struct file_operations nds_file_op = {
       .open = safe_open_nds,
       .read = nds_to_user,
